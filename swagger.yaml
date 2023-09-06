@@ -1,0 +1,438 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: User API
+  description: My User API
+  contact:
+    name: Meryam Abdulla
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+paths:
+  /users/register:
+    post:
+      summary: Register a new user
+      description: Use to register a user
+      tags:
+        - Users
+      parameters:
+        - in: body
+          name: User
+          description: The user to create
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - firstName
+                - lastName
+                - emailId
+                - password
+              properties:
+                firstName:
+                  type: string
+                  minLength: 1
+                  maxLength: 45
+                  example: Meryam
+                lastName:
+                  type: string
+                  minLength: 1
+                  maxLength: 45
+                  example: Abdulla
+                emailId:
+                  type: string
+                  minLength: 1
+                  maxLength: 45
+                  example: meryam@sample.com
+                password:
+                  type: string
+                  minLength: 1
+                  maxLength: 45
+                  example: 123456
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              example:
+                success: 1
+                data: User data here
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              example:
+                success: 0
+                message: Error message here
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              example:
+                success: 0
+                message: Error message here
+  /users/login:
+    post:
+      summary: User login
+      description: Use to log in a user
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - emailId
+                - password
+              properties:
+                emailId:
+                  type: string
+                  minLength: 1
+                  maxLength: 45
+                  example: meryam@sample.com
+                password:
+                  type: string
+                  minLength: 1
+                  maxLength: 45
+                  example: 123456
+      responses:
+        '200':
+          description: User logged in successfully
+          content:
+            application/json:
+              example:
+                success: 1
+                data: User data here
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                success: 0
+                message: Authentication failed
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              example:
+                success: 0
+                message: Error message here
+  /posts/add-post:
+    post:
+      summary: Add a new post
+      description: Use to add a new post
+      tags:
+        - Posts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - description
+                - imagePath
+                - addedByUserId
+              properties:
+                description:
+                  type: string
+                  minLength: 1
+                  maxLength: 255
+                  example: This is a post description
+                imagePath:
+                  type: string
+                  minLength: 1
+                  maxLength: 255
+                  example: /path/to/image.jpg
+                addedByUserId:
+                  type: integer
+                  minimum: 1
+                  example: 1
+      responses:
+        '201':
+          description: Post added successfully
+          content:
+            application/json:
+              example:
+                success: 1
+                data: Post data here
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              example:
+                success: 0
+                message: Error message here
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              example:
+                success: 0
+                message: Error message here
+  /posts/get-posts:
+    get:
+      summary: Get all posts
+      description: Use to get a list of all posts
+      tags:
+        - Posts
+      responses:
+        '200':
+          description: Posts retrieved successfully
+          content:
+            application/json:
+              example:
+                success: 1
+                data: [List of posts]
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              example:
+                success: 0
+                message: Error message here
+  paths:
+  /posts/get-post-by-id/{id}:
+    get:
+      summary: Get a post by ID
+      description: Use to get a post by its ID
+      tags:
+        - Posts
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The ID of the post to retrieve
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Post retrieved successfully
+          content:
+            application/json:
+              example:
+                success: 1
+                data: Post data here
+        '404':
+          description: Post not found
+          content:
+            application/json:
+              example:
+                success: 0
+                message: Post not found
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              example:
+                success: 0
+                message: Error message here
+  /posts/add-post-comment:
+    post:
+      summary: Add a comment to a post
+      description: Use to add a comment to a post
+      tags:
+        - Posts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - postId
+                - comment
+                - addedByUserId
+              properties:
+                postId:
+                  type: integer
+                  description: The ID of the post to add a comment to
+                comment:
+                  type: string
+                  minLength: 1
+                  maxLength: 255
+                  description: The comment text
+                addedByUserId:
+                  type: integer
+                  description: The ID of the user who added the comment
+      responses:
+        '201':
+          description: Comment added successfully
+          content:
+            application/json:
+              example:
+                success: 1
+                data: Comment data here
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              example:
+                success: 0
+                message: Error message here
+        '404':
+          description: Post not found
+          content:
+            application/json:
+              example:
+                success: 0
+                message: Post not found
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              example:
+                success: 0
+                message: Error message here
+  /posts/get-post-comment:
+    get:
+      summary: Get comments for a post
+      description: Use to get comments for a post
+      tags:
+        - Posts
+      parameters:
+        - in: query
+          name: postId
+          required: true
+          description: The ID of the post to retrieve comments for
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Comments retrieved successfully
+          content:
+            application/json:
+              example:
+                success: 1
+                data: [List of comments]
+        '404':
+          description: Post not found
+          content:
+            application/json:
+              example:
+                success: 0
+                message: Post not found
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              example:
+                success: 0
+                message: Error message here
+  /posts/like-post:
+    put:
+      summary: Like a post
+      description: Use to like a post
+      tags:
+        - Posts
+      parameters:
+        - in: query
+          name: postId
+          required: true
+          description: The ID of the post to like
+          schema:
+            type: integer
+        - in: query
+          name: likedByUserId
+          required: true
+          description: The ID of the user who likes the post
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Post liked successfully
+          content:
+            application/json:
+              example:
+                success: 1
+                message: Post liked
+        '404':
+          description: Post not found
+          content:
+            application/json:
+              example:
+                success: 0
+                message: Post not found
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              example:
+                success: 0
+                message: Error message here
+  /posts/dislike-post:
+    put:
+      summary: Dislike a post
+      description: Use to dislike a post
+      tags:
+        - Posts
+      parameters:
+        - in: query
+          name: postId
+          required: true
+          description: The ID of the post to dislike
+          schema:
+            type: integer
+        - in: query
+          name: dislikedByUserId
+          required: true
+          description: The ID of the user who dislikes the post
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Post disliked successfully
+          content:
+            application/json:
+              example:
+                success: 1
+                message: Post disliked
+        '404':
+          description: Post not found
+          content:
+            application/json:
+              example:
+                success: 0
+                message: Post not found
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              example:
+                success: 0
+                message: Error message here
+  /posts/delete-post:
+    delete:
+      summary: Delete a post
+      description: Use to delete a post
+      tags:
+        - Posts
+      parameters:
+        - in: query
+          name: postId
+          required: true
+          description: The ID of the post to delete
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Post deleted successfully
+        '404':
+          description: Post not found
+          content:
+            application/json:
+              example:
+                success: 0
+                message: Post not found
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              example:
+                success: 0
+                message: Error message here
+
